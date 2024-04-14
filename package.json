@@ -1,0 +1,11 @@
+{
+  "name": "chai-aur-backend",
+  "version": "1.0.0",
+  "description": "Learning Production grade backend learned from CHai Aur Backend - Youtube",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sudit",
+  "license": "ISC"
+}
