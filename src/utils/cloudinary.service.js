@@ -23,3 +23,6 @@ const uploadOnCloudinary = async (localFilePath) => {
         return { error: "File not Uploaded" }
     }
 }
+
+
+export { uploadOnCloudinary }

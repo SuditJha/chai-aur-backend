@@ -30,7 +30,7 @@ const userSchema = new Schema(
             type: String, // cloudinary
             required: true,
         },
-        avtar: {
+        coverImage: {
             type: String, // cloudinary
         },
         watchHistory: [
