@@ -4,7 +4,6 @@ import { ApiError } from "../utils/ApiError.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.service.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 
-
 const registerUser = asyncHandler(async (req, res) => {
 
     // Take all data from frontend.
@@ -36,7 +35,7 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "All fields are required!!")
     }
 
-    
+
 
     const existedUser = await User.findOne({
         $or: [{ username }, { email }]
@@ -49,14 +48,17 @@ const registerUser = asyncHandler(async (req, res) => {
     const avatarLocalFilePath = req.files?.avatar[0]?.path
     console.log("Avatar local path ", avatarLocalFilePath)
 
-    const coverImageLocalFilePath = req.files?.coverImage[0]?.path
-
     if (!avatarLocalFilePath) {
         throw new ApiError(400, "Avatar file is required!")
     }
 
-    const avatar = await uploadOnCloudinary.uploader.upload(avatarLocalFilePath)
-    const coverImage = (coverImageLocalFilePath) ? await uploadOnCloudinary.uploader.upload(coverImageLocalFilePath) : ""
+    const avatar = await uploadOnCloudinary(avatarLocalFilePath)
+
+    const coverImageLocalFilePath = req.files?.coverImage[0]?.path
+    let coverImage = ""
+    if (coverImageLocalFilePath) {
+        coverImage = await uploadOnCloudinary(coverImageLocalFilePath)
+    }
 
     if (!avatar) {
         throw new ApiError(400, "Avatar file is required!!")
