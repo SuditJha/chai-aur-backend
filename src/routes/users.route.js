@@ -18,6 +18,6 @@ router.route("/register").post(
     registerUser
 )
 
-upload
+
 
 export default router
