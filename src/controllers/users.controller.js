@@ -171,6 +171,9 @@ const logoutUser = asyncHandler(async (req, res) => {
             new: true
         }
     )
+
+    // console.log(user);
+
     const cookieOptions = {
         httpOnly: true,
         secure: true
@@ -228,10 +231,14 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
         throw new ApiError(401, "All fields are required")
     }
 
-    const user = await User.findById(req.user?._id)
-    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
+    console.log(req.user._id);
 
-    if (!isPasswordCorrect) {
+
+    const user = await User.findById(req.user?._id)
+    // console.log(user)
+    const isPasswordValid = await user.isPasswordCorrect(oldPassword)
+
+    if (!isPasswordValid) {
         throw new ApiError(401, "Invalid current Password")
     }
 
