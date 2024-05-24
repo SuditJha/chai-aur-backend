@@ -1,7 +1,7 @@
 import { User } from "../models/user.model.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
-import { uploadOnCloudinary } from "../utils/cloudinary.service.js"
+import { uploadOnCloudinary, deleteFromCloudinary } from "../utils/cloudinary.service.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken"
 
@@ -31,6 +31,7 @@ const registerUser = asyncHandler(async (req, res) => {
     // Check if (Files) images are uploaded or not // Check if avatar is uploaded or not
     // Upload them on cloudinary
     // Check if images are uploaded on cloudinary, check for avatar
+    // Remember to add images public Id from cloudinary in db
     // create user Object -> Create entry in db
     // remove refreshToken and password from response.
     //  Check if user is created or not
@@ -89,7 +90,9 @@ const registerUser = asyncHandler(async (req, res) => {
         email,
         password,
         avatar: avatar?.url || "",
+        avatarPublicId: avatar?.public_id || "",
         coverImage: coverImage?.url || "",
+        coverImagePublicId: coverImage?.public_id || "",
         username: username.toLowerCase(),
     })
 
@@ -295,8 +298,9 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Avatar file is missing!")
     }
 
-    const dbAvatarUrlToBeDeletedFromCloudinary = req?.user?.avatar
-    //TODO: Delete the old Avatar file uploaded on cloudinary
+    //NOTE: old avatar file is deleted from cloudinary
+    await deleteFromCloudinary(req.user?.avatarPublicId)
+
     const avatar = await uploadOnCloudinary(avatarLocalFilePath)
 
     if (!avatar?.url) {
@@ -307,7 +311,8 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
         req?.user?._id,
         {
             $set: {
-                avatar: avatar?.url
+                avatar: avatar?.url,
+                avatarPublicId: avatar?.public_id
             }
         },
         {
@@ -333,8 +338,8 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Cover Image file is missing!")
     }
 
-    const dbcoverImageUrlToBeDeletedOnCloudinary = req.user?.coverImage
-    //TODO: Delete the old cover image file uploaded on cloudinary
+    //NOTE: Old coverImageFile is now Deleted from cloudinary
+    await deleteFromCloudinary(req.user?.coverImagePublicId)
 
     const coverImage = await uploadOnCloudinary(coverImageLocalFilePath)
     if (!coverImage?.url) {
@@ -345,7 +350,8 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         req?.user?._id,
         {
             $set: {
-                coverImage: coverImage?.url
+                coverImage: coverImage?.url,
+                coverImagePublicId: coverImage?.public_id
             }
         },
         {
