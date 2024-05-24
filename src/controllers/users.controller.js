@@ -289,8 +289,8 @@ const updateUserAccountDetails = asyncHandler(async (req, res) => {
 })
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
-    const avatarLocalFilePath = req.file?.avatar?.path
-
+    const avatarLocalFilePath = req.file?.path
+    console.log(avatarLocalFilePath);
     if (!avatarLocalFilePath) {
         throw new ApiError(400, "Avatar file is missing!")
     }
@@ -298,11 +298,12 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     const dbAvatarUrlToBeDeletedFromCloudinary = req?.user?.avatar
     //TODO: Delete the old Avatar file uploaded on cloudinary
     const avatar = await uploadOnCloudinary(avatarLocalFilePath)
+
     if (!avatar?.url) {
         throw new ApiError(500, "Error while uploading avatar on cloudinary")
     }
 
-    const user = User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
         req?.user?._id,
         {
             $set: {
@@ -326,7 +327,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 })
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
-    const coverImageLocalFilePath = req.file?.coverImage?.path
+    const coverImageLocalFilePath = req.file?.path
 
     if (!coverImageLocalFilePath) {
         throw new ApiError(400, "Cover Image file is missing!")
@@ -340,7 +341,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Error while uploading cover image on cloudinary")
     }
 
-    const user = User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
         req?.user?._id,
         {
             $set: {
