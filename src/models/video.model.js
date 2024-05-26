@@ -7,7 +7,9 @@ const videoSchema = new Schema(
             required: [true, "VideoID is required"],
 
         },
-        thumbnail: {},
+        thumbnail: {
+            type: String,
+        },
         title: {
             type: String,
             required: true,

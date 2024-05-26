@@ -28,11 +28,13 @@ app.use(cookieParser())
 
 // Routes import
 import userRouter from "./routes/users.route.js"
+import playlistRouter from "./routes/playlist.route.js"
 
 
 // routes Declaration
 
 app.use("/api/v1/users", userRouter)
+app.use("/api/v1/playlist", playlistRouter)
 // http//{baseurl}/api/v1/users/{register}
 
 export default app

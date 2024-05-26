@@ -41,10 +41,10 @@ const userSchema = new Schema(
             type: String,
             required: true
         },
-        watchHistory: [
+        playlist: [
             {
                 type: Schema.Types.ObjectId,
-                ref: "Video"
+                ref: "Playlist"
             }
         ],
         password: {
