@@ -62,9 +62,6 @@ const getVideoDetails = async (videoId) => {
             {
                 part: "snippet, contentDetails, statistics",
                 id: videoId,
-
-                // pageToken: nextPageToken
-
             }
         )
 

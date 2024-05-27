@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const noteSchema = new Schema(
     {
@@ -18,5 +19,7 @@ const noteSchema = new Schema(
     { timestamps: true }
 
 )
+
+noteSchema.plugin(mongooseAggregatePaginate)
 
 export const Note = mongoose.model("Note", noteSchema)
